@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- @Version $Id$ -->
-<install version="1.5" type="plugin" group="system">
-	<name>Systen - DomiX Debug Class</name>
+<install version="1.5" type="plugin" group="system" method="upgrade">
+	<name>Systen - mediahof - DomiX Debug Class</name>
 	<author>Dominik Gorczyca</author>
 	<creationDate>July 2008</creationDate>
 	<copyright>Copyright (C) 2008 - 2011 mediahof. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>mail@mediahof.de</authorEmail>
 	<authorUrl>www.mediahof.de</authorUrl>
-	<version>1.5</version>
+	<version>1.5.1</version>
 	<description>DomiX Debug Class</description>
 	<files>
 		<filename plugin="domix">domix.php</filename>
