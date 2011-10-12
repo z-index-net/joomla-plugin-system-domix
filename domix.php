@@ -2,7 +2,7 @@
 /**
  * DomiX Debug Static Class
  * 
- * @version    $Id: domix.php 1 2011-10-12 09:17:31Z bruno $
+ * @version    $Id$
  * @package    domix_debug_class
  * @author     Dominik Gorczyca, mediahof, Kiel-Germany
  * @copyright  Copyright (C) 2008 - 2011 mediahof. All rights reserved.

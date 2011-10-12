@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- @Version $Id: domix.xml 3 2011-10-12 15:19:45Z bruno $ -->
+<!-- @Version $Id$ -->
 <install version="1.5" type="plugin" group="system">
 	<name>Systen - DomiX Debug Class</name>
 	<author>Dominik Gorczyca</author>
