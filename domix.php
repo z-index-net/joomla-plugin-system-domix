@@ -9,6 +9,7 @@
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @link       http://www.mediahof.de
  */
+
 class domix{
 	private static $_css = array( 
 		'border-top:  1px solid #00f;',
