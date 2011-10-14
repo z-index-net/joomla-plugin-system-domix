@@ -10,6 +10,8 @@
  * @link       http://www.mediahof.de
  */
 
+defined('_JEXEC') or die();
+
 class domix{
 	private static $_css = array( 
 		'border-top:  1px solid #00f;',
