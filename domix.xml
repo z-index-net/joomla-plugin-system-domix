@@ -8,7 +8,7 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>mail@mediahof.de</authorEmail>
 	<authorUrl>www.mediahof.de</authorUrl>
-	<version>1.5.1</version>
+	<version>1.5.2</version>
 	<description>DomiX Debug Class</description>
 	<files>
 		<filename plugin="domix">domix.php</filename>
