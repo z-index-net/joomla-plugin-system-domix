@@ -12,7 +12,7 @@
 
 defined('_JEXEC') or die();
 
-class domix{
+abstract class domix{
     
     public static $count = 0;
 
@@ -84,6 +84,19 @@ class domix{
     public function counter() {
         return ++self::$count;
     }
+    
+    public function allowed() {
+        return (self::params()->get('ip') == $_SERVER['REMOTE_ADDR']);
+    }
+    
+    public function params() {
+        static $params;
+        if(!$params) {
+            $plugin = &JPluginHelper::getPlugin('system', 'domix');
+            $params = new JParameter($plugin->params);
+        }
+        return $params;
+    }
 }
 
 /**
@@ -93,6 +106,8 @@ class domix{
  * @param bool $exit
  */
 function domix( $data, $exit = false ){
+    if(!domix::allowed()) { return; }
+
 	$count = domix::counter();
     domix::_( $data, 'Row '.$count, $exit );
 }
@@ -103,7 +118,9 @@ function domix( $data, $exit = false ){
  * @param mixed $data
  * @param bool $exit
  */
-function domixf( $data, $exit = false ){
+function domixFB( $data, $exit = false ){
+    if(!domix::allowed()) { return; }
+    
     $count = domix::counter();
     fb($data, 'Row '.$count);
     domix::_( $data, 'Row '.$count, $exit );
@@ -115,10 +132,75 @@ function domixf( $data, $exit = false ){
  * @param mixed $data
  * @param bool $exit
  */
-function domixd( $data, $exit = false ){
+function domixD( $data, $exit = false ){
+    if(!domix::allowed()) { return; }
+
 	$count = domix::counter();
     ob_start();
     var_dump($data);
     $data = ob_get_clean();
     domix::_( $data, 'Dump '.$count, $exit );
 }
+
+/**
+ * Gibt Daten mit domix aus und sendet diese per mail
+ *
+ * @param mixed $data
+ * @param bool $exit
+ */
+function domixM( $data ){
+    if(!domix::allowed()) { return; }
+
+	$count = domix::counter();
+    ob_start();
+    domix::_( $data, 'Row '.$count);
+    $body = ob_get_clean();
+    $frommail = & JFactory::getConfig()->getValue('config.mailfrom');
+    $fromname = & JFactory::getConfig()->getValue('config.fromname');
+    
+    $params = &domix::params();
+    $recipient = $params->get('mail');
+    if($recipient){
+        $subject = JFactory::getConfig()->getValue('config.sitename') . ' - domix ' . date('y.m.d h:i:s');
+        JUtility::sendMail($frommail, $fromname, $recipient, $subject, $body, true);
+    }else{
+        JError::raiseWarning(404, 'domixM not work, no recipient set');
+    }
+}
+
+
+/**
+ * Speichert die Domix Ausgabe als HTML Datei
+ *
+ * @param mixed $data
+ * @param bool $exit
+ */
+function domixF( $data, $output=false ){
+    if(!domix::allowed()) { return; }
+
+	$count = domix::counter();
+    ob_start();
+    domix::_( $data, 'Row '.$count);
+    $body = ob_get_clean();
+    $target = 'tmp' . DS . 'domix_' . date('y-m-d_h-i-s') . '.html';
+    file_put_contents(JPATH_ROOT . DS . $target, $body);
+    if($output) {
+        exit('<a href="'.$target.'">'.$target.'</a>');
+    }
+}
+
+/**
+ * Gibt den aktuellen Query und einen dazugehörigen Fehler aus.
+ */
+function domixDB(){
+    $db = & JFactory::getDBO();
+    $query = $db->getQuery();
+    $error = $db->getErrorMsg();
+    if($error) {
+        $data = str_replace(';', PHP_EOL, ($query . PHP_EOL . PHP_EOL . $error));
+        domix::_($data , 'SQL Error');
+    }else{
+        domix($query);
+    }
+}
+
