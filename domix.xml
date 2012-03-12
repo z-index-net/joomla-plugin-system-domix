@@ -8,11 +8,21 @@
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>mail@mediahof.de</authorEmail>
     <authorUrl>www.mediahof.de</authorUrl>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <description>DomiX Debug Class</description>
     <files>
         <filename plugin="domix">domix.php</filename>
     </files>
+    <!-- Joomla! 1.6+ -->
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Empfänger für domixM();" />
+                <field name="ip" type="text" default="217.70.192.236" size="25" label="erlaubte IP" description="Nur diese IP sieht domix ausgaben." />
+            </fieldset>
+        </fields>
+    </config>
+    <!-- Joomla! 1.5 -->
     <params>
         <param name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Empfänger für domixM();" />
         <param name="ip" type="text" default="217.70.192.236" size="25" label="erlaubte IP" description="Nur diese IP sieht domix ausgaben." />

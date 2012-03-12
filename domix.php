@@ -5,7 +5,7 @@
  * @version    $Id$
  * @package    domix_debug_class
  * @author     Dominik Gorczyca, mediahof, Kiel-Germany
- * @copyright  Copyright (C) 2008 - 2011 mediahof. All rights reserved.
+ * @copyright  Copyright (C) 2008 - 2012 mediahof. All rights reserved.
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @link       http://www.mediahof.de
  */
