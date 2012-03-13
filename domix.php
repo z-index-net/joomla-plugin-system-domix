@@ -93,6 +93,7 @@ abstract class domix{
         static $params;
         if(!$params) {
             $plugin = &JPluginHelper::getPlugin('system', 'domix');
+            jimport( 'joomla.html.parameter' );
             $params = new JParameter($plugin->params);
         }
         return $params;
