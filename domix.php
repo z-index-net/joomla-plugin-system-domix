@@ -5,7 +5,7 @@
  * @version    $Id$
  * @package    domix_debug_class
  * @author     Dominik Gorczyca, mediahof, Kiel-Germany
- * @copyright  Copyright (C) 2008 - 2012 mediahof. All rights reserved.
+ * @copyright  Copyright (C) 2008 - 2011 mediahof. All rights reserved.
  * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
  * @link       http://www.mediahof.de
  */
@@ -15,6 +15,7 @@ defined('_JEXEC') or die();
 abstract class domix{
     
     public static $count = 0;
+    public static $clean = false;
 
 	private static $_css = array( 
 		'border-top:  1px solid #00f;',
@@ -31,8 +32,12 @@ abstract class domix{
 		$out = call_user_func( array( 
 			'self', $funccall 
 		), $data );
-
-		echo '<pre style="'.implode(self::$_css).'"><u>'.$count.':</u>'."\n".$out."\n".'</pre>';
+        
+        if(!self::$clean) {
+            echo '<pre style="'.implode(self::$_css).'"><u>'.$count.':</u>'."\n".$out."\n".'</pre>';
+        }else{
+            echo htmlspecialchars_decode(strip_tags($out));
+        }
 
 		if ( $exit ) exit();
 	}
@@ -84,19 +89,82 @@ abstract class domix{
     public function counter() {
         return ++self::$count;
     }
-    
-    public function allowed() {
-        return (self::params()->get('ip') == $_SERVER['REMOTE_ADDR']);
-    }
-    
+        
     public function params() {
         static $params;
         if(!$params) {
             $plugin = &JPluginHelper::getPlugin('system', 'domix');
-            jimport( 'joomla.html.parameter' );
+            jimport('joomla.html.parameter');
             $params = new JParameter($plugin->params);
         }
         return $params;
+    }
+    
+    public static function allowed() {
+        $ips = self::params()->get('ips');
+        $allowed = array_filter(explode(PHP_EOL, $ips));
+        
+        if(empty($allowed)) {
+            $allowed = array($ips);
+        }
+        
+        $allowed = array_filter(array_map('trim', $allowed));
+        
+        foreach($allowed as $allow) {
+            if(filter_var($allow, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && self::ipv4($allow)) {
+                return true;
+            }
+            
+            if(filter_var($allow, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && self::ipv6($allow)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static function ipv4($allow) {
+        return ($allow == $_SERVER['REMOTE_ADDR']);
+    }
+    
+    public static function ipv6($allow) {
+        if($_SERVER['REMOTE_ADDR'] == $allow) {
+            return true;
+        }
+        
+        if(strpos($allow, '/') !== false) {
+            list($subnet, $mask) = explode('/', $allow);
+            $subnet = inet_pton($subnet);
+            $ip_pton = inet_pton($_SERVER['REMOTE_ADDR']);
+            return self::iPv6CidrMatch($ip_pton, $subnet, $mask) ? true : false;
+        }
+        
+        return false;
+    }
+    
+    private static function iPv6MaskToByteArray($subnetMask) {
+        $addr = str_repeat("f", $subnetMask / 4);
+        switch ($subnetMask % 4) {
+        case 0:
+            break;
+        case 1:
+            $addr .= "8";
+            break;
+        case 2:
+            $addr .= "c";
+            break;
+        case 3:
+            $addr .= "e";
+            break;
+        }
+        $addr = str_pad($addr, 32, '0');
+        $addr = pack("H*" , $addr);
+        return $addr;
+    }
+
+    private static function iPv6CidrMatch($address, $subnetAddress, $subnetMask) {
+        $binMask = self::iPv6MaskToByteArray($subnetMask);
+        return ($address & $binMask) == $subnetAddress;
     }
 }
 
@@ -110,20 +178,6 @@ function domix( $data, $exit = false ){
     if(!domix::allowed()) { return; }
 
 	$count = domix::counter();
-    domix::_( $data, 'Row '.$count, $exit );
-}
-
-/**
- * Gibt Daten mit domix und Firebug aus
- *
- * @param mixed $data
- * @param bool $exit
- */
-function domixFB( $data, $exit = false ){
-    if(!domix::allowed()) { return; }
-    
-    $count = domix::counter();
-    fb($data, 'Row '.$count);
     domix::_( $data, 'Row '.$count, $exit );
 }
 
@@ -149,9 +203,7 @@ function domixD( $data, $exit = false ){
  * @param mixed $data
  * @param bool $exit
  */
-function domixM( $data ){
-    if(!domix::allowed()) { return; }
-
+function domixM($data){
 	$count = domix::counter();
     ob_start();
     domix::_( $data, 'Row '.$count);
@@ -162,7 +214,7 @@ function domixM( $data ){
     $params = &domix::params();
     $recipient = $params->get('mail');
     if($recipient){
-        $subject = JFactory::getConfig()->getValue('config.sitename') . ' - domix ' . date('y.m.d h:i:s');
+        $subject = JFactory::getConfig()->getValue('config.sitename') . ' - domix ' . date('y.m.d H:i:s');
         JUtility::sendMail($frommail, $fromname, $recipient, $subject, $body, true);
     }else{
         JError::raiseWarning(404, 'domixM not work, no recipient set');
@@ -183,7 +235,7 @@ function domixF( $data, $output=false ){
     ob_start();
     domix::_( $data, 'Row '.$count);
     $body = ob_get_clean();
-    $target = 'tmp' . DS . 'domix_' . date('y-m-d_h-i-s') . '.html';
+    $target = 'tmp' . DS . 'domix_' . date('y-m-d_H-i-s') . '.html';
     file_put_contents(JPATH_ROOT . DS . $target, $body);
     if($output) {
         exit('<a href="'.$target.'">'.$target.'</a>');

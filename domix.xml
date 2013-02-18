@@ -4,11 +4,11 @@
     <name>Systen - mediahof - DomiX Debug Class</name>
     <author>Dominik Gorczyca</author>
     <creationDate>July 2008</creationDate>
-    <copyright>Copyright (C) 2008 - 2012 mediahof. All rights reserved.</copyright>
+    <copyright>Copyright (C) 2008 - 2013 mediahof. All rights reserved.</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>mail@mediahof.de</authorEmail>
     <authorUrl>www.mediahof.de</authorUrl>
-    <version>1.5.4</version>
+    <version>1.5.5</version>
     <description>DomiX Debug Class</description>
     <files>
         <filename plugin="domix">domix.php</filename>
@@ -19,12 +19,13 @@
             <fieldset name="basic">
                 <field name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Empfänger für domixM();" />
                 <field name="ip" type="text" default="217.70.192.236" size="25" label="erlaubte IP" description="Nur diese IP sieht domix ausgaben." />
+                <param name="ips" type="textarea" default="217.70.192.236" cols="30" rows="5" label="erlaubte IPAdressen" description="Pro Zeile eine IP-Adresse. IPv6 Netze möglich." />
             </fieldset>
         </fields>
     </config>
     <!-- Joomla! 1.5 -->
     <params>
         <param name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Empfänger für domixM();" />
-        <param name="ip" type="text" default="217.70.192.236" size="25" label="erlaubte IP" description="Nur diese IP sieht domix ausgaben." />
+        <param name="ips" type="textarea" default="217.70.192.236"  cols="30" rows="5" label="erlaubte IP" description="Pro Zeile eine IP-Adresse. IPv6 Netze möglich." />
     </params>
 </install>
