@@ -110,12 +110,11 @@ abstract class domix{
         
         $allowed = array_filter(array_map('trim', $allowed));
         
-        foreach($allowed as $allow) {
+        foreach($allowed as $allow) {            
             if(filter_var($allow, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && self::ipv4($allow)) {
                 return true;
             }
-            
-            if(filter_var($allow, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && self::ipv6($allow)) {
+            elseif(self::ipv6($allow)) {
                 return true;
             }
         }
