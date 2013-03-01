@@ -18,13 +18,13 @@
         <fields name="params">
             <fieldset name="basic">
                 <field name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Empfänger für domixM();" />
-                <param name="ips" type="textarea" default="217.70.192.236" cols="30" rows="5" label="erlaubte IPAdressen" description="Pro Zeile eine IP-Adresse. IPv6 Netze möglich." />
+                <field name="ips" type="textarea" default="217.70.192.236&#13;&#10;2a00:12d0:5000:300::/56" cols="30" rows="5" label="erlaubte IP" description="Pro Zeile eine IP-Adresse. IPv6 Netze möglich." />
             </fieldset>
         </fields>
     </config>
     <!-- Joomla! 1.5 -->
     <params>
         <param name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Empfänger für domixM();" />
-        <param name="ips" type="textarea" default="217.70.192.236"  cols="30" rows="5" label="erlaubte IP" description="Pro Zeile eine IP-Adresse. IPv6 Netze möglich." />
+        <param name="ips" type="textarea" default="217.70.192.236&#13;&#10;2a00:12d0:5000:300::/56" cols="30" rows="5" label="erlaubte IP" description="Pro Zeile eine IP-Adresse. IPv6 Netze möglich." />
     </params>
 </install>
