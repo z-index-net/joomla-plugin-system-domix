@@ -85,6 +85,13 @@ abstract class domix{
 	private static function fromResource( $data ){
 		return self::fromString( $data );
 	}
+	
+	public static function err() {
+	    if(self::allowed()) {
+	        error_reporting(6135);
+	        ini_set('display_errors',1);
+	    }
+	}
     
     public function counter() {
         return ++self::$count;
@@ -207,10 +214,10 @@ function domixM($data){
     ob_start();
     domix::_( $data, 'Row '.$count);
     $body = ob_get_clean();
-    $frommail = & JFactory::getConfig()->getValue('config.mailfrom');
-    $fromname = & JFactory::getConfig()->getValue('config.fromname');
+    $frommail = JFactory::getConfig()->getValue('config.mailfrom');
+    $fromname = JFactory::getConfig()->getValue('config.fromname');
     
-    $params = &domix::params();
+    $params = domix::params();
     $recipient = $params->get('mail');
     if($recipient){
         $subject = JFactory::getConfig()->getValue('config.sitename') . ' - domix ' . date('y.m.d H:i:s');

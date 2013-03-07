@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="plg_domix" default="release">
+
+    <exec command="svn update" dir="." />
+    
+    <svnlastrevision workingcopy="." propertyname="revision" />
+    
+    <property name="save.dir" value="c:\phing\" />
+    
+    <property name="temp.dir" value="${save.dir}/${phing.project.name}" />
+        
+    <fileset dir="." id="project.files">
+        <include name="**" />
+        <exclude name="build.xml" />
+        <exclude name=".**" />
+    </fileset>
+    
+    <target name="release">
+        <copy todir="${temp.dir}" tstamp="false">
+            <fileset refid="project.files" />
+            <filterchain>
+                <replacetokens>
+                    <token key="SVN_REVISION" value="${revision}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+        
+        <zip destfile="${save.dir}/${phing.project.name}.1.5.${revision}.zip" basedir="${temp.dir}" />
+        
+        <delete dir="${temp.dir}" />
+    </target>
+</project>
