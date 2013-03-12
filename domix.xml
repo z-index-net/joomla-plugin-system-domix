@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- @Version $Id$ -->
 <install version="1.5" type="plugin" group="system" method="upgrade">
-    <name>Systen - mediahof - DomiX</name>
+    <name>System - mediahof - DomiX</name>
     <author>Dominik Gorczyca</author>
     <creationDate>July 2008</creationDate>
     <copyright>Copyright (C) 2008 - 2013 mediahof. All rights reserved.</copyright>
