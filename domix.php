@@ -100,7 +100,7 @@ abstract class domix{
     public function params() {
         static $params;
         if(!$params) {
-            $plugin = &JPluginHelper::getPlugin('system', 'domix');
+            $plugin = JPluginHelper::getPlugin('system', 'domix');
             jimport('joomla.html.parameter');
             $params = new JParameter($plugin->params);
         }
@@ -130,7 +130,20 @@ abstract class domix{
     }
     
     public static function ipv4($allow) {
-        return ($allow == $_SERVER['REMOTE_ADDR']);
+        if($allow == $_SERVER['REMOTE_ADDR']) {
+            return true;
+        }
+        
+        if(strpos($allow, '/') !== false) {
+            list ($subnet, $bits) = explode('/', $allow);
+            $ip = ip2long($ip);
+            $subnet = ip2long($subnet);
+            $mask = -1 << (32 - $bits);
+            $subnet &= $mask;
+            return ($ip & $mask) == $subnet;
+        }
+        
+        return false;
     }
     
     public static function ipv6($allow) {
