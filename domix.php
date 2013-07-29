@@ -13,7 +13,7 @@ abstract class domix{
     public static $count = 0;
     public static $clean = false;
 
-	private static $_css = array( 
+	private static $css = array( 
 		'border-top:  1px solid #00f;',
 		'font-size:   11px;',
 		'font-family: Verdana;',
@@ -23,24 +23,24 @@ abstract class domix{
 	
 	public static function _(&$data, $count, $exit = false){
 		$type = gettype( $data );
-		$function = 'from' .ucfirst( $type );
-		$funccall = is_callable( 'self::' .$function ) ? $function : 'fromString';
-		$out = call_user_func( array( 
-			'self', $funccall 
-		), $data );
+		$function = 'from' .ucfirst($type);
+		$funccall = is_callable(array('self', $function)) ? $function : 'fromString';
+		$out = call_user_func(array('self', $funccall), $data);
 		
         if(!self::$clean) {
-            echo '<pre style="'.implode(self::$_css).'"><u>'.$count.':</u>'."\n".$out."\n".'</pre>';
+            echo '<pre style="' . implode(self::$css) . '"><u>' . $count . ':</u>'."\n" . $out . "\n".'</pre>';
         }else{
             echo htmlspecialchars_decode(strip_tags($out));
         }
 
-		if ( $exit ) exit();
+		if($exit) {
+			exit;
+		}
 	}
     
-	private static function fromObject( $data ){
+	private static function fromObject($data){
 		$echo = array();
-		$echo[] = 'Instanz von "'.get_class( $data ).'" ';
+		$echo[] = 'Instanz von "' . get_class($data) . '" ';
 		$parentclass = get_parent_class( $data );
 		$echo[] = $parentclass ? ' geerbt von "'.$parentclass.'"' : '';
 		$echo[] = "\n<u>Objekt Variablen</u>:\n";
@@ -51,41 +51,41 @@ abstract class domix{
 			$echo[] = "\n<u>Public Methoden von " .$parentclass ."</u>:\n";
 			$echo[] = '- '.print_r( implode( "\n- ", get_class_methods( $parentclass ) ), true );
 		}
-		return implode( $echo );
+		return implode($echo);
 	}
 	
-	private static function fromBoolean( $data ){
-		return self::fromString( $data );
+	private static function fromBoolean($data){
+		return self::fromString($data);
 	}
 	
-	private static function fromFloat( $data ){
-		return self::fromString( $data );
+	private static function fromFloat($data){
+		return self::fromString($data);
 	}
 	
-	private static function fromInteger( $data ){
-		return self::fromString( $data );
+	private static function fromInteger($data){
+		return self::fromString($data);
 	}
 	
-	private static function fromDouble( $data ){
-		return self::fromString( $data );
+	private static function fromDouble($data){
+		return self::fromString($data);
 	}
 	
-	private static function fromString( $data ){
-		return htmlspecialchars( ( string ) $data);
+	private static function fromString($data){
+		return htmlspecialchars((string) $data);
 	}
 	
-	private static function fromArray( $data ){
-		return print_r( $data, true );
+	private static function fromArray($data){
+		return print_r($data, true);
 	}
 	
-	private static function fromResource( $data ){
-		return self::fromString( $data );
+	private static function fromResource($data){
+		return self::fromString($data);
 	}
 	
 	public static function err() {
 	    if(self::allowed()) {
 	        error_reporting(6135);
-	        ini_set('display_errors',1);
+	        ini_set('display_errors', 1);
 	    }
 	}
     
