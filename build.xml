@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="plg_domix" default="release">
+<project name="plg_system_domix" basedir="." default="build">
 
-    <exec command="svn update" dir="." />
-    
-    <svnlastrevision workingcopy="." propertyname="revision" />
-    
-    <property name="save.dir" value="c:\phing\" />
-    
-    <property name="temp.dir" value="${save.dir}/${phing.project.name}" />
-        
-    <fileset dir="." id="project.files">
-        <include name="**" />
-        <exclude name="build.xml" />
-        <exclude name=".**" />
-    </fileset>
-    
-    <target name="release">
-        <copy todir="${temp.dir}" tstamp="false">
-            <fileset refid="project.files" />
-            <filterchain>
-                <replacetokens>
-                    <token key="SVN_REVISION" value="${revision}" />
-                </replacetokens>
-            </filterchain>
-        </copy>
-        
-        <zip destfile="${save.dir}/${phing.project.name}.1.5.${revision}.zip" basedir="${temp.dir}" />
-        
-        <delete dir="${temp.dir}" />
-    </target>
-</project>
+	<exec command="git rev-list --all | wc -l" dir="." outputProperty="revision" />
+
+	<property name="path" value="/var/www/_deployment/" />
+
+	<property name="zip" value="${path}${phing.project.name}.rev.${revision}.zip" />
+
+	<fileset dir="." id="allfiles">
+		<include name="**" />
+		<exclude name="build.xml" />
+		<exclude name=".**" />
+	</fileset>
+
+	<fileset dir="_tmp" id="tmp">
+		<include name="**" />
+	</fileset>
+
+	<target name="cleanup">
+		<delete dir="_tmp" />
+		<delete file="${zip}" />
+	</target>
+
+	<target name="build" depends="cleanup">
+
+		<copy todir="_tmp">
+			<fileset refid="allfiles" />
+			<filterchain>
+				<replacetokens>
+					<token key="REVISION" value="rev ${revision}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<zip destfile="${zip}">
+			<fileset refid="tmp" />
+		</zip>
+
+		<delete dir="_tmp" />
+
+	</target>
+
+</project> 

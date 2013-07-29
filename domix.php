@@ -1,16 +1,12 @@
 <?php
 /**
- * DomiX Debug Static Class
- * 
- * @version    $Id$
- * @package    domix_debug_class
- * @author     Dominik Gorczyca, mediahof, Kiel-Germany
- * @copyright  Copyright (C) 2008 - 2011 mediahof. All rights reserved.
- * @license    GNU Public License <http://www.gnu.org/licenses/gpl.html>
+ * @author     mediahof, Kiel-Germany
  * @link       http://www.mediahof.de
+ * @copyright  Copyright (C) 2011 - 2013 mediahof. All rights reserved.
+ * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 abstract class domix{
     
@@ -25,14 +21,14 @@ abstract class domix{
 		'background:  #ffffef;' 
 	);
 	
-	public static function _( &$data, $count, $exit = false){
+	public static function _(&$data, $count, $exit = false){
 		$type = gettype( $data );
 		$function = 'from' .ucfirst( $type );
 		$funccall = is_callable( 'self::' .$function ) ? $function : 'fromString';
 		$out = call_user_func( array( 
 			'self', $funccall 
 		), $data );
-        
+		
         if(!self::$clean) {
             echo '<pre style="'.implode(self::$_css).'"><u>'.$count.':</u>'."\n".$out."\n".'</pre>';
         }else{
@@ -93,16 +89,15 @@ abstract class domix{
 	    }
 	}
     
-    public function counter() {
+    public static function counter() {
         return ++self::$count;
     }
         
-    public function params() {
+    public static function params() {
         static $params;
         if(!$params) {
             $plugin = JPluginHelper::getPlugin('system', 'domix');
-            jimport('joomla.html.parameter');
-            $params = new JParameter($plugin->params);
+            $params = new JRegistry($plugin->params);
         }
         return $params;
     }
@@ -193,11 +188,11 @@ abstract class domix{
  * @param mixed $data
  * @param bool $exit
  */
-function domix( $data, $exit = false ){
+function domix($data, $exit = false){
     if(!domix::allowed()) { return; }
 
 	$count = domix::counter();
-    domix::_( $data, 'Row '.$count, $exit );
+    domix::_($data, 'Row '.$count, $exit);
 }
 
 /**
@@ -206,14 +201,18 @@ function domix( $data, $exit = false ){
  * @param mixed $data
  * @param bool $exit
  */
-function domixD( $data, $exit = false ){
+function domixD($data, $exit = false){
     if(!domix::allowed()) { return; }
+    
+    if(function_exists('xdebug_get_code_coverage')) {
+    	domix::$clean = true;
+    }
 
 	$count = domix::counter();
     ob_start();
     var_dump($data);
     $data = ob_get_clean();
-    domix::_( $data, 'Dump '.$count, $exit );
+    domix::_($data, 'Dump '.$count, $exit);
 }
 
 /**
@@ -224,20 +223,16 @@ function domixD( $data, $exit = false ){
  */
 function domixM($data){
 	$count = domix::counter();
-    ob_start();
-    domix::_( $data, 'Row '.$count);
-    $body = ob_get_clean();
-    $frommail = JFactory::getConfig()->getValue('config.mailfrom');
-    $fromname = JFactory::getConfig()->getValue('config.fromname');
-    
-    $params = domix::params();
-    $recipient = $params->get('mail');
-    if($recipient){
-        $subject = JFactory::getConfig()->getValue('config.sitename') . ' - domix ' . date('y.m.d H:i:s');
-        JUtility::sendMail($frommail, $fromname, $recipient, $subject, $body, true);
-    }else{
-        JError::raiseWarning(404, 'domixM not work, no recipient set');
-    }
+	ob_start();
+	domix::_( $data, 'Row '.$count);
+	$body = ob_get_clean();
+	$frommail = JFactory::getConfig()->get('mailfrom');
+	$fromname = JFactory::getConfig()->get('fromname');
+	
+	$params = domix::params();
+	$recipient = $params->get('mail');
+	$subject = JFactory::getConfig()->get('sitename') . ' - domix ' . date('y.m.d H:i:s');
+	JMail::sendMail($frommail, $fromname, $recipient, $subject, $body, true);
 }
 
 
@@ -247,15 +242,15 @@ function domixM($data){
  * @param mixed $data
  * @param bool $exit
  */
-function domixF( $data, $output=false ){
+function domixF($data, $output=false){
     if(!domix::allowed()) { return; }
 
 	$count = domix::counter();
     ob_start();
-    domix::_( $data, 'Row '.$count);
+    domix::_($data, 'Row '.$count);
     $body = ob_get_clean();
-    $target = 'tmp' . DS . 'domix_' . date('y-m-d_H-i-s') . '.html';
-    file_put_contents(JPATH_ROOT . DS . $target, $body);
+    $target = '/tmp' . DS . 'domix_' . date('y-m-d_H-i-s_u') . '.html';
+    file_put_contents(JPATH_ROOT . $target, $body);
     if($output) {
         exit('<a href="'.$target.'">'.$target.'</a>');
     }
@@ -265,8 +260,8 @@ function domixF( $data, $output=false ){
  * Gibt den aktuellen Query und einen dazugehörigen Fehler aus.
  */
 function domixDB(){
-    $db = & JFactory::getDBO();
-    $query = $db->getQuery();
+    $db = JFactory::getDBO();
+    $query = (string) $db->getQuery();
     $error = $db->getErrorMsg();
     if($error) {
         $data = str_replace(';', PHP_EOL, ($query . PHP_EOL . PHP_EOL . $error));
@@ -275,4 +270,3 @@ function domixDB(){
         domix($query);
     }
 }
-
