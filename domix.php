@@ -232,7 +232,7 @@ function domixM($data){
 	$params = domix::params();
 	$recipient = $params->get('mail');
 	$subject = JFactory::getConfig()->get('sitename') . ' - domix ' . date('y.m.d H:i:s');
-	JMail::sendMail($frommail, $fromname, $recipient, $subject, $body, true);
+	JMail::getInstance()->sendMail($frommail, $fromname, $recipient, $subject, $body, true);
 }
 
 
