@@ -261,7 +261,7 @@ function domixF($data, $output=false){
  */
 function domixDB(){
     $db = JFactory::getDBO();
-    $query = (string) $db->getQuery();
+    $query = str_replace('#__', $db->getPrefix(), (string) $db->getQuery());
     $error = $db->getErrorMsg();
     if($error) {
         $data = str_replace(';', PHP_EOL, ($query . PHP_EOL . PHP_EOL . $error));
