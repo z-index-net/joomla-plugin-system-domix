@@ -213,6 +213,10 @@ function domixD($data, $exit = false){
     var_dump($data);
     $data = ob_get_clean();
     domix::_($data, 'Dump '.$count, $exit);
+    
+    if(domix::$clean == true) {
+    	domix::$clean = false;
+    }
 }
 
 /**
