@@ -10,6 +10,7 @@
 	<fileset dir="." id="allfiles">
 		<include name="**" />
 		<exclude name="build.xml" />
+		<exclude name="README" />
 		<exclude name=".**" />
 	</fileset>
 

@@ -1,0 +1,8 @@
+Debugging functions for Joomla developers as System Plugin.
+
+Debug output is only visible for configured IPs (usefull on live sites).
+
+example calls: <pre>domix($obj);</pre> (print)
+domix($obj) (mail to configured mail)
+domixD($obj); (var_dump print)
+domixDB(); (database debugging, output sql query and errors)
