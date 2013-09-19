@@ -17,7 +17,7 @@
 		<fields name="params">
 			<fieldset name="basic">
 				<field name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Recipient for domixM();" />
-				<field name="ips" type="textarea" default="127.0.0.1&#13;&#10;217.70.192.236&#13;&#10;2a00:12d0:5000:300::/56" cols="30" rows="5" label="allowed  IP" description="Per Line one IP-Adress. IPv6 Network possible." />
+				<field name="ips" type="textarea" default="127.0.0.1&#13;&#10;217.70.192.236&#13;&#10;2a00:12d0:5000:300::/56" cols="30" rows="5" label="allowed IP" description="One IP per Line. IPv6 Network possible." />
 			</fieldset>
 		</fields>
 	</config>
