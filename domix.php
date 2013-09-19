@@ -40,15 +40,15 @@ abstract class domix{
     
 	private static function fromObject($data){
 		$echo = array();
-		$echo[] = 'Instanz von "' . get_class($data) . '" ';
+		$echo[] = 'instance of "' . get_class($data) . '" ';
 		$parentclass = get_parent_class( $data );
-		$echo[] = $parentclass ? ' geerbt von "'.$parentclass.'"' : '';
-		$echo[] = "\n<u>Objekt Variablen</u>:\n";
+		$echo[] = $parentclass ? ' inherited from "'.$parentclass.'"' : '';
+		$echo[] = "\n<u>Object variables</u>:\n";
 		$echo[] = htmlspecialchars(print_r( $data, true ));
-		$echo[] = "\n<u>Objekt Methoden</u>:\n";
+		$echo[] = "\n<u>Objekt Method</u>:\n";
 		$echo[] = '- '.print_r( implode( "\n- ", get_class_methods( get_class( $data ) ) ), true );
 		if($parentclass) {
-			$echo[] = "\n<u>Public Methoden von " .$parentclass ."</u>:\n";
+			$echo[] = "\n<u>Public Methods from " .$parentclass ."</u>:\n";
 			$echo[] = '- '.print_r( implode( "\n- ", get_class_methods( $parentclass ) ), true );
 		}
 		return implode($echo);
@@ -183,7 +183,7 @@ abstract class domix{
 }
 
 /**
- * Gibt Daten mit domix aus
+ * print given data for debugging
  *
  * @param mixed $data
  * @param bool $exit
@@ -196,7 +196,7 @@ function domix($data, $exit = false){
 }
 
 /**
- * Gibt Daten mit domix und var_dump aus
+ * domix with var_dump
  *
  * @param mixed $data
  * @param bool $exit
@@ -220,7 +220,7 @@ function domixD($data, $exit = false){
 }
 
 /**
- * Gibt Daten mit domix aus und sendet diese per mail
+ * send domix output via email
  *
  * @param mixed $data
  * @param bool $exit
@@ -241,10 +241,10 @@ function domixM($data){
 
 
 /**
- * Speichert die Domix Ausgabe als HTML Datei
+ * Save domix Ouput to file
  *
  * @param mixed $data
- * @param bool $exit
+ * @param bool $output exit with a hyper link to html file
  */
 function domixF($data, $output=false){
     if(!domix::allowed()) { return; }
@@ -261,7 +261,8 @@ function domixF($data, $output=false){
 }
 
 /**
- * Gibt den aktuellen Query und einen dazugehörigen Fehler aus.
+ * results the current query (should be used after $db->loadResult() or else
+ * also output the sql error text if exists
  */
 function domixDB(){
     $db = JFactory::getDBO();
