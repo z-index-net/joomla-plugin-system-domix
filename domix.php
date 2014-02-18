@@ -30,6 +30,12 @@ abstract class domix
         $funccall = is_callable(array('self', $function)) ? $function : 'fromString';
         $out = call_user_func(array('self', $funccall), $data);
 
+        if ($exit) {
+            JResponse::clearHeaders();
+            JResponse::setHeader('Content-Type', 'text/html; charset=utf-8');
+            JResponse::sendHeaders();
+        }
+
         if (!self::$clean) {
             echo '<pre style="' . implode(self::$css) . '"><u>' . $count . ':</u>' . "\n" . $out . "\n" . '</pre>';
         } else {
@@ -37,9 +43,6 @@ abstract class domix
         }
 
         if ($exit) {
-            JResponse::clearHeaders();
-            JResponse::setHeader('Content-Type', 'text/html; charset=utf-8');
-            JResponse::sendHeaders();
             exit;
         }
     }
