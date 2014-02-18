@@ -3,7 +3,7 @@
     <name>System - domix</name>
     <author>mediahof</author>
     <creationDate>Sep 2011</creationDate>
-    <copyright>(C) 2011 - 2013 mediahof. All rights reserved.</copyright>
+    <copyright>(C) 2011 - 2014 mediahof. All rights reserved.</copyright>
     <license>GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
     <authorEmail>mail@mediahof.de</authorEmail>
     <authorUrl>www.mediahof.de</authorUrl>
@@ -11,12 +11,11 @@
     <description>developed by mediahof - Multimedia, Communication and IT</description>
     <files>
         <filename plugin="domix">domix.php</filename>
-        <filename>index.html</filename>
     </files>
     <config>
         <fields name="params">
             <fieldset name="basic">
-                <field name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail Empfänger" description="Recipient for domixM();" />
+                <field name="mail" type="text" default="mail@mediahof.de" size="25" label="E-Mail" description="Recipient for domixM();" />
                 <field name="ips" type="textarea" default="127.0.0.1&#13;&#10;217.70.192.236&#13;&#10;2a00:12d0:5000:300::/56" cols="30" rows="5" label="allowed IP" description="One IP per Line. IPv6 Network possible." />
             </fieldset>
         </fields>
