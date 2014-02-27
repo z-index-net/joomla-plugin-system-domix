@@ -8,3 +8,4 @@
 - domixM($obj) (mail to configured mail)
 - domixD($obj); (print var_dump)
 - domixDB(); (database debugging, output sql query for copy/paste and errors)
+- domixCT(); (function call trace)
