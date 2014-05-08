@@ -293,20 +293,33 @@ function domixF($data, $output = false)
 }
 
 /**
- * results the current query (should be used after $db->loadResult() or else
- * also output the sql error text if exists
+ * results the current query (should be used after $db->loadResult(), $db->execute() or else
+ * also output the sql error message if exists
+ * @param bool $exit
  */
-function domixDB()
+function domixDB($exit = false)
 {
     $db = JFactory::getDBO();
-    $query = str_replace('#__', $db->getPrefix(), (string)$db->getQuery());
-    $error = $db->getErrorMsg();
-    if ($error) {
-        $data = str_replace(';', PHP_EOL, ($query . PHP_EOL . PHP_EOL . $error));
-        domix::_($data, 'SQL Error');
-    } else {
-        domix($query);
+
+    // replace prefix for copy/paste
+    $search[] = '#__';
+    $replace[] = $db->getPrefix();
+
+    // new lines if multiple queries
+    $search[] = ';';
+    $replace[] = PHP_EOL . PHP_EOL . ';';
+
+    // new line on each AND select statement
+    $search[] = 'AND';
+    $replace[] = PHP_EOL . 'AND';
+
+    $query = str_ireplace($search, $replace, (string)$db->getQuery());
+
+    if ($error = $db->getErrorMsg()) {
+        $query = $query . PHP_EOL . PHP_EOL . $error;
     }
+
+    domix($query, $exit);
 }
 
 /**
