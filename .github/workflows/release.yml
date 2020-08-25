@@ -39,8 +39,13 @@ jobs:
                     ref: master
                     add: updatestream.xml
                     message: 'version bump in joomla updatestream.xml'
-                    author_name: ${{ secrets.ACTION_COMMIT_USER_NAME }}
-                    author_email: ${{ secrets.ACTION_COMMIT_USER_EMAIL }}
+
+            -   name: trigger build of extensions.xml
+                uses: peter-evans/repository-dispatch@v1
+                with:
+                    token: ${{ secrets.PAGE_ACCESS_TOKEN }}
+                    repository: z-index-net/page
+                    event-type: auto-build
 
             -   name: create release from tag
                 id: create_release
